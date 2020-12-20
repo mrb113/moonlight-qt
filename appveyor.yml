@@ -40,17 +40,12 @@ before_build:
 build_script:
   - cmd: 'set PATH=%OLDPATH%;%QTDIR%\msvc2019_64\bin;%ProgramFiles(x86)%\WiX Toolset v3.11\bin'
   - cmd: 'scripts\build-arch.bat Release x64'
-  - cmd: 'set PATH=%OLDPATH%;%QTDIR%\msvc2019\bin;%ProgramFiles(x86)%\WiX Toolset v3.11\bin'
-  - cmd: 'scripts\build-arch.bat Release x86'
-  - cmd: 'scripts\generate-bundle.bat Release'
   - sh: '[ "$BUILD_TARGET" != linux ] || source /opt/qt514/bin/qt514-env.sh'
   - sh: '[ "$BUILD_TARGET" != linux ] || PATH=$PATH:$HOME/bin scripts/build-appimage.sh'
   - sh: '[ "$BUILD_TARGET" != macos ] || scripts/generate-dmg.sh Release'
   - sh: '[ "$BUILD_TARGET" != steamlink ] || STEAMLINK_SDK_PATH=$HOME/steamlink-sdk scripts/build-steamlink-app.sh'
 
 after_build:
-  - cmd: 'appveyor PushArtifact build\installer-x86-Release\MoonlightPortable-x86-%VERSION%.zip -FileName MoonlightPortable-x86-r%APPVEYOR_BUILD_NUMBER%.zip'
-  - cmd: 'appveyor PushArtifact build\symbols-x86-Release\MoonlightDebuggingSymbols-x86-%VERSION%.zip -FileName MoonlightDebuggingSymbols-x86-r%APPVEYOR_BUILD_NUMBER%.zip'
   - cmd: 'appveyor PushArtifact build\installer-x64-Release\MoonlightPortable-x64-%VERSION%.zip -FileName MoonlightPortable-x64-r%APPVEYOR_BUILD_NUMBER%.zip'
   - cmd: 'appveyor PushArtifact build\symbols-x64-Release\MoonlightDebuggingSymbols-x64-%VERSION%.zip -FileName MoonlightDebuggingSymbols-x64-r%APPVEYOR_BUILD_NUMBER%.zip'
   - sh: '[ "$BUILD_TARGET" != steamlink ] || appveyor PushArtifact build/installer-release/Moonlight-SteamLink-$VERSION.zip -FileName Moonlight-SteamLink-r$APPVEYOR_BUILD_NUMBER.zip'
